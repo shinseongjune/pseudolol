@@ -23,12 +23,16 @@ public abstract class Champion : MonoBehaviour
         Move,
         Attack,
         AttackMove,
-        Skill
+        Skill,
+        Die
     }
 
     State state;
 
-    protected abstract void Idle();
+    protected virtual void Idle()
+    {
+
+    }
 
     protected abstract void Stop();
 
@@ -40,8 +44,38 @@ public abstract class Champion : MonoBehaviour
 
     protected abstract void Skill();
 
+    protected abstract void Die();
+
     protected virtual void Start()
     {
         state = State.Idle;
+    }
+
+    protected virtual void Update()
+    {
+        switch (state)
+        {
+            case State.Idle:
+                Idle();
+                break;
+            case State.Stop:
+                Stop();
+                break;
+            case State.Move:
+                Move();
+                break;
+            case State.Attack:
+                Attack();
+                break;
+            case State.AttackMove:
+                AttackMove();
+                break;
+            case State.Skill:
+                Skill();
+                break;
+            case State.Die:
+                Die();
+                break;
+        }
     }
 }
