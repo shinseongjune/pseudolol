@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ChampPreset : MonoBehaviour
 {
+    public float HP { get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
