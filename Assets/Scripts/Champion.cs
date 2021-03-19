@@ -4,22 +4,26 @@ using UnityEngine;
 
 public abstract class Champion : MonoBehaviour
 {
-    public int Level { get; set; }
-    public int Exp { get; set; }
-    public int MaxExp { get; set; }
+    public int Level { get; set; } = 1;
+    public int Exp { get; set; } = 0;
+    public int MaxExp { get; set; } = 220;
     public float BaseHP { get; set; }
     public float HP { get; set; }
     public float MaxHP { get; set; }
+    public float HPInc { get; }
     public float BaseAD { get; set; }
     public float AD { get; set; }
-    public float BaseAP { get; set; }
-    public float AP { get; set; }
+    public float ADInc { get; }
+    public float AP { get; set; } = 0.0f;
     public float BaseDefense { get; set; }
     public float Defense { get; set; }
+    public float DefenseInc { get; }
     public float BaseResist { get; set; }
     public float Resist { get; set; }
+    public float ResistInc { get; }
     public float BaseAS { get; set; }
     public float AS { get; set; }
+    public float ASInc { get; }
     public float CritChance { get; set; } = 0.0f;
     public float CritDamage { get; set; } = 2.0f;
     public float Reach { get; set; } = 160.0f;
@@ -28,8 +32,11 @@ public abstract class Champion : MonoBehaviour
     public float ArmorPenetration { get; set; } = 0.0f;
     public float MagicPenetration { get; set; } = 0.0f;
 
+    Transform myTransform;
+    Vector3 destinationPosition;
+    float destinationDistance;
     CharacterController cc;
-
+    
     enum State
     {
         Idle,
@@ -90,7 +97,20 @@ public abstract class Champion : MonoBehaviour
 
     }
 
-    protected abstract void Move();
+    protected virtual void Move(Ray ray, RaycastHit rch)
+    {
+        Vector3 targetPoint = ray.GetPoint(0);
+        destinationPosition = ray.GetPoint(0);
+        Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+        myTransform.rotation = targetRotation;
+        
+        destinationDistance = Vector3.Distance(destinationPosition, myTransform.position);
+
+        if (destinationDistance > .5f)
+        {
+            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPosition, MoveSpeed * Time.deltaTime);
+        }
+    }
 
     protected abstract void Attack();
 
@@ -101,14 +121,30 @@ public abstract class Champion : MonoBehaviour
     protected virtual void Die()
     {
         StopAllCoroutines();
-        StartCoroutine(DieProcess());
+
+        float respawnTime;
+
+        if (Level <= 6)
+        {
+            respawnTime = Level * 2 + 4;
+        }
+        else if (Level == 7)
+        {
+            respawnTime = 21;
+        }
+        else
+        {
+            respawnTime = Level * 2.5f + 7.5f;
+        }
+
+        StartCoroutine(DieProcess(respawnTime));
     }
 
-    IEnumerator DieProcess()
+    IEnumerator DieProcess(float respawnTime)
     {
         cc.enabled = false;
 
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(respawnTime);
         
     }
 
@@ -116,20 +152,42 @@ public abstract class Champion : MonoBehaviour
     {
         state = State.Idle;
         cc = GetComponent<CharacterController>();
+        myTransform = transform;
+        destinationPosition = myTransform.position;
     }
 
     protected virtual void Update()
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rch;
+            if (Physics.Raycast(ray, out rch, 100))
+            {
+                state = State.Move;
+                Move(ray, rch);
+            }
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rch;
+            if (Physics.Raycast(ray, out rch, 100))
+            {
+                state = State.Move;
+                Move(ray, rch);
+            }
+        }
+
         switch (state)
         {
             case State.Idle:
                 Idle();
                 break;
+            case State.Move:
+                break;
             case State.Stop:
                 Stop();
-                break;
-            case State.Move:
-                Move();
                 break;
             case State.Attack:
                 Attack();
