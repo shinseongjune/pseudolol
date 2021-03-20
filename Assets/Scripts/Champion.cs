@@ -27,29 +27,16 @@ public abstract class Champion : MonoBehaviour
     public float CritChance { get; set; } = 0.0f;
     public float CritDamage { get; set; } = 2.0f;
     public float Reach { get; set; } = 160.0f;
-    public float MoveSpeed { get; set; }
+    public float MoveSpeed { get; set; } = 2.2f;
     public float Tenacity { get; set; } = 0.0f;
     public float ArmorPenetration { get; set; } = 0.0f;
     public float MagicPenetration { get; set; } = 0.0f;
 
-    Transform myTransform;
-    Vector3 destinationPosition;
-    float destinationDistance;
     CharacterController cc;
-    
-    enum State
-    {
-        Idle,
-        Stop,
-        Move,
-        Attack,
-        AttackMove,
-        Skill,
-        Die
-    }
 
-    State state;
+    Vector3 targetPos;
 
+    bool moving = false;
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -82,7 +69,6 @@ public abstract class Champion : MonoBehaviour
 
         if (HP <= 0)
         {
-            state = State.Die;
             Die();
         }
     }
@@ -95,21 +81,6 @@ public abstract class Champion : MonoBehaviour
     protected virtual void Stop()
     {
 
-    }
-
-    protected virtual void Move(Ray ray, RaycastHit rch)
-    {
-        Vector3 targetPoint = ray.GetPoint(0);
-        destinationPosition = ray.GetPoint(0);
-        Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-        myTransform.rotation = targetRotation;
-        
-        destinationDistance = Vector3.Distance(destinationPosition, myTransform.position);
-
-        if (destinationDistance > .5f)
-        {
-            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPosition, MoveSpeed * Time.deltaTime);
-        }
     }
 
     protected abstract void Attack();
@@ -145,59 +116,61 @@ public abstract class Champion : MonoBehaviour
         cc.enabled = false;
 
         yield return new WaitForSeconds(respawnTime);
-        
+
+        Revive();
+    }
+
+    protected virtual void Revive()
+    {
+
     }
 
     protected virtual void Start()
     {
-        state = State.Idle;
         cc = GetComponent<CharacterController>();
-        myTransform = transform;
-        destinationPosition = myTransform.position;
+        targetPos = transform.position;
     }
 
     protected virtual void Update()
     {
+        float dis = Vector3.Distance(transform.position, targetPos);
+        if (dis >= 0.01f)
+        {
+            transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
+            moving = true;
+        }
+        else
+        {
+            moving = false;
+        }
+
+        if (moving)
+        {
+            Vector3 dir = targetPos - transform.position;
+            Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
+            Quaternion targetRot = Quaternion.LookRotation(dirXZ);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 25.0f * Time.deltaTime);
+        }
+
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rch;
-            if (Physics.Raycast(ray, out rch, 100))
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 10000f))
             {
-                state = State.Move;
-                Move(ray, rch);
+                targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
             }
         }
         else if (Input.GetMouseButton(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rch;
-            if (Physics.Raycast(ray, out rch, 100))
-            {
-                state = State.Move;
-                Move(ray, rch);
-            }
-        }
+            RaycastHit hit;
 
-        switch (state)
-        {
-            case State.Idle:
-                Idle();
-                break;
-            case State.Move:
-                break;
-            case State.Stop:
-                Stop();
-                break;
-            case State.Attack:
-                Attack();
-                break;
-            case State.AttackMove:
-                AttackMove();
-                break;
-            case State.Skill:
-                Skill();
-                break;
+            if (Physics.Raycast(ray, out hit, 10000f))
+            {
+                targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+            }
         }
     }
 }
