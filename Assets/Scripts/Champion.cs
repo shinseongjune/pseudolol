@@ -156,20 +156,46 @@ public abstract class Champion : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 10000f))
+            int mask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("RedPlayer") | 1 << LayerMask.NameToLayer("Extra");
+            
+            if (Physics.Raycast(ray, out hit, 10000f, mask))
             {
-                targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+                string hitName = hit.transform.gameObject.name;
+                if (hitName == "Ground")
+                {
+                    targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+                }
+                else if (hitName == "Player" || hitName == "Extra")
+                {
+                    // 공격이동
+                }
+                else
+                {
+                    
+                }
             }
         }
         else if (Input.GetMouseButton(1))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+            int mask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("RedPlayer") | 1 << LayerMask.NameToLayer("Extra");
 
-            if (Physics.Raycast(ray, out hit, 10000f))
+            if (Physics.Raycast(ray, out hit, 10000f, mask))
             {
-                targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+                string hitName = hit.transform.gameObject.name;
+                if (hitName == "Ground")
+                {
+                    targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+                }
+                else if (hitName == "Player" || hitName == "Extra")
+                {
+                    // 공격이동
+                }
+                else
+                {
+
+                }
             }
         }
     }
