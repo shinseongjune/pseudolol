@@ -122,7 +122,8 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Revive()
     {
-
+        HP = MaxHP;
+        cc.enabled = true;
     }
 
     protected virtual void Start()
@@ -136,7 +137,8 @@ public abstract class Champion : MonoBehaviour
         float dis = Vector3.Distance(transform.position, targetPos);
         if (dis >= 0.01f)
         {
-            transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
+            //transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
+            cc.Move(targetPos);
             moving = true;
         }
         else
@@ -144,13 +146,13 @@ public abstract class Champion : MonoBehaviour
             moving = false;
         }
 
-        if (moving)
+        /*if (moving)
         {
             Vector3 dir = targetPos - transform.position;
             Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
             Quaternion targetRot = Quaternion.LookRotation(dirXZ);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 25.0f * Time.deltaTime);
-        }
+        }*/
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -168,10 +170,6 @@ public abstract class Champion : MonoBehaviour
                 else if (hitName == "Player" || hitName == "Extra")
                 {
                     // 공격이동
-                }
-                else
-                {
-                    
                 }
             }
         }
@@ -191,10 +189,6 @@ public abstract class Champion : MonoBehaviour
                 else if (hitName == "Player" || hitName == "Extra")
                 {
                     // 공격이동
-                }
-                else
-                {
-
                 }
             }
         }
