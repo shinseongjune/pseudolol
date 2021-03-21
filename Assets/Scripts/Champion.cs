@@ -36,7 +36,7 @@ public abstract class Champion : MonoBehaviour
 
     Vector3 targetPos;
 
-    bool moving = false;
+    bool isMoving = false;
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -124,12 +124,12 @@ public abstract class Champion : MonoBehaviour
     {
         HP = MaxHP;
         cc.enabled = true;
+        targetPos = new Vector3(0, 0, 0);
     }
 
     protected virtual void Start()
     {
         cc = GetComponent<CharacterController>();
-        targetPos = transform.position;
     }
 
     protected virtual void Update()
@@ -139,20 +139,20 @@ public abstract class Champion : MonoBehaviour
         {
             //transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
             cc.Move(targetPos);
-            moving = true;
+            isMoving = true;
         }
         else
         {
-            moving = false;
+            isMoving = false;
         }
 
-        /*if (moving)
+        if (isMoving)
         {
-            Vector3 dir = targetPos - transform.position;
+            Vector3 dir = targetPos;
             Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
             Quaternion targetRot = Quaternion.LookRotation(dirXZ);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 25.0f * Time.deltaTime);
-        }*/
+        }
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -165,7 +165,9 @@ public abstract class Champion : MonoBehaviour
                 string hitName = hit.transform.gameObject.name;
                 if (hitName == "Ground")
                 {
-                    targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
+                    Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
+                    Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
+                    targetPos = targetDir - transform.position;
                 }
                 else if (hitName == "Player" || hitName == "Extra")
                 {
@@ -175,22 +177,7 @@ public abstract class Champion : MonoBehaviour
         }
         else if (Input.GetMouseButton(1))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            int mask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("RedPlayer") | 1 << LayerMask.NameToLayer("Extra");
 
-            if (Physics.Raycast(ray, out hit, 10000f, mask))
-            {
-                string hitName = hit.transform.gameObject.name;
-                if (hitName == "Ground")
-                {
-                    targetPos = new Vector3(hit.point.x, 1f, hit.point.z);
-                }
-                else if (hitName == "Player" || hitName == "Extra")
-                {
-                    // 공격이동
-                }
-            }
         }
     }
 }
