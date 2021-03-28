@@ -61,6 +61,7 @@ public abstract class Champion : MonoBehaviour
         }
 
         Level += 1;
+        Exp = extraExp;
     }
 
     protected virtual void Damaged(float dmg)
