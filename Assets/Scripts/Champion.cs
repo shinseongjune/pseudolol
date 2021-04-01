@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class Champion : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public abstract class Champion : MonoBehaviour
     Vector3 targetPos;
 
     bool isMoving = false;
+
+    NavMeshAgent agent;
+
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -131,29 +135,31 @@ public abstract class Champion : MonoBehaviour
     protected virtual void Start()
     {
         cc = GetComponent<CharacterController>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     protected virtual void Update()
     {
-        float dis = Vector3.Distance(transform.position, targetPos);
-        if (dis >= 0.01f)
-        {
+        //float dis = Vector3.Distance(transform.position, targetPos);
+        //if (dis >= 0.01f)
+        //{
             //transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
-            cc.Move(targetPos);
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
-        }
+            //cc.Move(targetPos);
+        //    isMoving = true;
+        //}
+        //else
+        //{
+        //    isMoving = false;
+        //}
+        agent.SetDestination(targetPos);
 
-        if (isMoving)
-        {
-            Vector3 dir = targetPos;
-            Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
-            Quaternion targetRot = Quaternion.LookRotation(dirXZ);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 25.0f * Time.deltaTime);
-        }
+        //if (isMoving)
+        //{
+        //    Vector3 dir = targetPos;
+        //    Vector3 dirXZ = new Vector3(dir.x, 0f, dir.z);
+        //    Quaternion targetRot = Quaternion.LookRotation(dirXZ);
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, 25.0f * Time.deltaTime);
+        //}
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -166,9 +172,10 @@ public abstract class Champion : MonoBehaviour
                 string hitName = hit.transform.gameObject.name;
                 if (hitName == "Ground")
                 {
-                    Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
-                    Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
-                    targetPos = targetDir - transform.position;
+                    //Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
+                    //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
+                    //targetPos = targetDir - transform.position;
+                    targetPos = hit.point;
                 }
                 else if (hitName == "Player" || hitName == "Extra")
                 {
@@ -178,7 +185,30 @@ public abstract class Champion : MonoBehaviour
         }
         else if (Input.GetMouseButton(1))
         {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            int mask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("RedPlayer") | 1 << LayerMask.NameToLayer("Extra");
 
+            if (Physics.Raycast(ray, out hit, 10000f, mask))
+            {
+                string hitName = hit.transform.gameObject.name;
+                if (hitName == "Ground")
+                {
+                    //Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
+                    //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
+                    //targetPos = targetDir - transform.position;
+                    targetPos = hit.point;
+                }
+                else if (hitName == "Player" || hitName == "Extra")
+                {
+                    // 공격이동
+                }
+            }
+        }
+
+        if (Input.GetButtonDown("Q"))
+        {
+            Debug.Log("Q!");
         }
     }
 }
