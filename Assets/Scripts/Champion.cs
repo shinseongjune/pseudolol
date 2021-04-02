@@ -208,7 +208,7 @@ public abstract class Champion : MonoBehaviour
 
         if (Input.GetButtonDown("Q"))
         {
-            Debug.Log("Q!");
+            
         }
     }
 }
