@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Vayne : Champion
 {
+    bool isTumbling = false;
+
     protected override void Attack()
     {
         throw new System.NotImplementedException();
@@ -61,6 +63,23 @@ public class Vayne : Champion
 
     protected override void Update()
     {
+        if (isTumbling == true)
+        {
+            return;
+        }
+
         base.Update();
+
+        if (Input.GetButtonDown("Q"))
+        {
+            isTumbling = true;
+            this.Tumble();
+            isTumbling = false;
+        }
+    }
+
+    void Tumble()
+    {
+        
     }
 }
