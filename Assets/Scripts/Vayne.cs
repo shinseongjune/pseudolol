@@ -6,6 +6,8 @@ public class Vayne : Champion
 {
     bool isTumbling = false;
 
+    float tumbleSpeed = 20.0f;
+
     protected override void Attack()
     {
         throw new System.NotImplementedException();
