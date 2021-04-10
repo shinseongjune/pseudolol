@@ -33,7 +33,7 @@ public abstract class Champion : MonoBehaviour
     public float ArmorPenetration { get; set; } = 0.0f;
     public float MagicPenetration { get; set; } = 0.0f;
 
-    CharacterController cc;
+    public CharacterController cc;
 
     Vector3 targetPos;
 
