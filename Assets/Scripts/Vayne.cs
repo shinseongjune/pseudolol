@@ -7,7 +7,7 @@ public class Vayne : Champion
     bool isTumbling = false;
 
     float tumbleSpeed = 20.0f;
-    float tumbleTime = 0.1f;
+    float tumbleTime = 0.8f;
     float tumbleStartTime = 0f;
     Vector3 tumbleDirection;
 
@@ -81,15 +81,11 @@ public class Vayne : Champion
             tumbleStartTime = 0f;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            int mask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("RedPlayer") | 1 << LayerMask.NameToLayer("Extra");
 
-            if (Physics.Raycast(ray, out hit, 10000f, mask))
+            if (Physics.Raycast(ray, out hit, 10000f))
             {
                 string hitName = hit.transform.gameObject.name;
-                if (hitName == "Ground")
-                {
-                    tumbleDirection = hit.point;
-                }
+                tumbleDirection = hit.point - transform.position;
             }
             StartCoroutine(Tumble());
             isTumbling = false;
