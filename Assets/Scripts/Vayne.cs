@@ -6,7 +6,7 @@ public class Vayne : Champion
 {
     bool isTumbling = false;
 
-    float tumbleSpeed = 20.0f;
+    float tumbleSpeed = 2.0f;
     float tumbleTime = 0.8f;
     float tumbleStartTime = 0f;
     Vector3 tumbleDirection;
@@ -79,30 +79,37 @@ public class Vayne : Champion
         {
             isTumbling = true;
             tumbleStartTime = 0f;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            Ray qRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit qHit;
 
-            if (Physics.Raycast(ray, out hit, 10000f))
+            if (Physics.Raycast(qRay, out qHit, 10000f))
             {
-                string hitName = hit.transform.gameObject.name;
-                tumbleDirection = hit.point - transform.position;
+                Vector3 xzPosition = new Vector3(transform.position.x, 0, transform.position.z);
+                tumbleDirection = qHit.point - xzPosition;
+                tumbleDirection.Normalize();
+                transform.rotation = new Quaternion(tumbleDirection.x, tumbleDirection.y, tumbleDirection.z, 0);
+                StartCoroutine(Tumble());
             }
-            StartCoroutine(Tumble());
-            isTumbling = false;
         }
     }
 
     IEnumerator Tumble()
     {
-        if (tumbleStartTime < tumbleTime)
+        while (true)
         {
-            cc.Move(tumbleDirection * Time.deltaTime * tumbleSpeed);
-            tumbleStartTime += Time.deltaTime;
-        }
-        else
-        {
-            tumbleDirection = Vector3.zero;
-            yield return null;
+            if (tumbleStartTime < tumbleTime)
+            {
+                cc.Move(tumbleDirection * Time.deltaTime * tumbleSpeed);
+                tumbleStartTime += Time.deltaTime;
+                targetPos = transform.position;
+            }
+            else
+            {
+                tumbleDirection = Vector3.zero;
+                targetPos = transform.position;
+                isTumbling = false;
+                yield return null;
+            }
         }
     }
 }

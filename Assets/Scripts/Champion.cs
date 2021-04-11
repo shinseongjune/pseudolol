@@ -35,7 +35,7 @@ public abstract class Champion : MonoBehaviour
 
     public CharacterController cc;
 
-    Vector3 targetPos;
+    public Vector3 targetPos;
 
     bool isMoving = false;
 
