@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,8 @@ public class Vayne : Champion
 {
     bool isTumbling = false;
 
-    float tumbleSpeed = 2.0f;
-    float tumbleTime = 0.8f;
+    float tumbleSpeed = 12.0f;
+    float tumbleTime = 0.2f;
     float tumbleStartTime = 0f;
     Vector3 tumbleDirection;
 
@@ -70,45 +71,36 @@ public class Vayne : Champion
     {
         if (isTumbling == true)
         {
-            return;
-        }
-
-        base.Update();
-
-        if (Input.GetButtonDown("Q"))
-        {
-            isTumbling = true;
-            tumbleStartTime = 0f;
-            Ray qRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit qHit;
-
-            if (Physics.Raycast(qRay, out qHit, 10000f))
-            {
-                Vector3 xzPosition = new Vector3(transform.position.x, 0, transform.position.z);
-                tumbleDirection = qHit.point - xzPosition;
-                tumbleDirection.Normalize();
-                transform.rotation = new Quaternion(tumbleDirection.x, tumbleDirection.y, tumbleDirection.z, 0);
-                StartCoroutine(Tumble());
-            }
-        }
-    }
-
-    IEnumerator Tumble()
-    {
-        while (true)
-        {
             if (tumbleStartTime < tumbleTime)
             {
                 cc.Move(tumbleDirection * Time.deltaTime * tumbleSpeed);
                 tumbleStartTime += Time.deltaTime;
                 targetPos = transform.position;
+                return;
             }
             else
             {
                 tumbleDirection = Vector3.zero;
                 targetPos = transform.position;
                 isTumbling = false;
-                yield return null;
+            }
+        }
+
+        base.Update();
+
+        if (Input.GetButtonDown("Q"))
+        {
+            Ray qRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit qHit;
+
+            if (Physics.Raycast(qRay, out qHit, 10000f))
+            {
+                tumbleStartTime = 0f;
+                Vector3 hitDir = new Vector3(qHit.point.x, 0, qHit.point.z);
+                Vector3 xzPosition = new Vector3(transform.position.x, 0, transform.position.z);
+                tumbleDirection = hitDir - transform.position;
+                tumbleDirection.Normalize();
+                isTumbling = true;
             }
         }
     }
