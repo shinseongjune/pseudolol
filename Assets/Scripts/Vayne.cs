@@ -73,13 +73,14 @@ public class Vayne : Champion
         {
             if (tumbleStartTime < tumbleTime)
             {
-                cc.Move(tumbleDirection * Time.deltaTime * tumbleSpeed);
+                cc.SimpleMove(tumbleDirection * tumbleSpeed);
                 tumbleStartTime += Time.deltaTime;
                 targetPos = transform.position;
                 return;
             }
             else
             {
+                transform.rotation = Quaternion.Euler(tumbleDirection);
                 tumbleDirection = Vector3.zero;
                 targetPos = transform.position;
                 isTumbling = false;
@@ -102,6 +103,10 @@ public class Vayne : Champion
                 tumbleDirection.Normalize();
                 isTumbling = true;
             }
+        }
+        else if (Input.GetButtonDown("W"))
+        {
+            cc.Move(Vector3.forward * Time.deltaTime * tumbleSpeed);
         }
     }
 }
