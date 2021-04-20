@@ -41,6 +41,8 @@ public abstract class Champion : MonoBehaviour
 
     NavMeshAgent agent;
 
+    public Animator anim;
+
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -136,6 +138,8 @@ public abstract class Champion : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
+        anim.SetBool("Walk", false);
     }
 
     protected virtual void Update()
@@ -151,6 +155,16 @@ public abstract class Champion : MonoBehaviour
         //{
         //    isMoving = false;
         //}
+
+        if(targetPos != transform.position)
+        {
+            anim.SetBool("Walk", true);
+        }
+        else
+        {
+            anim.SetBool("Walk", false);
+        }
+
         agent.SetDestination(targetPos);
 
         //if (isMoving)

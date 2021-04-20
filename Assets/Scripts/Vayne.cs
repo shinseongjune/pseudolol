@@ -80,7 +80,6 @@ public class Vayne : Champion
             }
             else
             {
-                transform.rotation = Quaternion.Euler(tumbleDirection);
                 tumbleDirection = Vector3.zero;
                 targetPos = transform.position;
                 isTumbling = false;
@@ -97,16 +96,14 @@ public class Vayne : Champion
             if (Physics.Raycast(qRay, out qHit, 10000f))
             {
                 tumbleStartTime = 0f;
-                Vector3 hitDir = new Vector3(qHit.point.x, 0, qHit.point.z);
-                Vector3 xzPosition = new Vector3(transform.position.x, 0, transform.position.z);
-                tumbleDirection = hitDir - transform.position;
+                tumbleDirection = qHit.point - transform.position;
                 tumbleDirection.Normalize();
                 isTumbling = true;
             }
         }
         else if (Input.GetButtonDown("W"))
         {
-            cc.Move(Vector3.forward * Time.deltaTime * tumbleSpeed);
+            
         }
     }
 }
