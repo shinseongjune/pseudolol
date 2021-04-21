@@ -43,6 +43,10 @@ public abstract class Champion : MonoBehaviour
 
     public Animator anim;
 
+    float dist;
+
+    float lastDist;
+    
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -136,6 +140,7 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Start()
     {
+        targetPos = transform.position;
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
@@ -156,16 +161,21 @@ public abstract class Champion : MonoBehaviour
         //    isMoving = false;
         //}
 
-        if(targetPos != transform.position)
+        if (anim.GetBool("Walk"))
         {
-            anim.SetBool("Walk", true);
-        }
-        else
-        {
-            anim.SetBool("Walk", false);
-        }
+            agent.SetDestination(targetPos);
+            dist = Vector3.Distance(agent.transform.position, targetPos);
+            if (dist < 0.02f)
+            {
+                anim.SetBool("Walk", false);
+            }
+            if (lastDist == dist && agent.velocity.x == 0 && agent.velocity.z == 0)
+            {
+                anim.SetBool("Walk", false);
+            }
 
-        agent.SetDestination(targetPos);
+            lastDist = dist;
+        }
 
         //if (isMoving)
         //{
@@ -190,6 +200,7 @@ public abstract class Champion : MonoBehaviour
                     //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
                     //targetPos = targetDir - transform.position;
                     targetPos = hit.point;
+                    anim.SetBool("Walk", true);
                 }
                 else if (hitName == "Player" || hitName == "Extra")
                 {
