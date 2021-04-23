@@ -39,13 +39,11 @@ public abstract class Champion : MonoBehaviour
 
     bool isMoving = false;
 
-    NavMeshAgent agent;
+    public NavMeshAgent agent;
 
     public Animator anim;
 
     float dist;
-
-    float lastDist;
     
     protected virtual void GetEXP(int exp)
     {
@@ -145,6 +143,8 @@ public abstract class Champion : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         anim.SetBool("Walk", false);
+        anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        agent.speed = MoveSpeed;
     }
 
     protected virtual void Update()
@@ -152,8 +152,8 @@ public abstract class Champion : MonoBehaviour
         //float dis = Vector3.Distance(transform.position, targetPos);
         //if (dis >= 0.01f)
         //{
-            //transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
-            //cc.Move(targetPos);
+        //transform.localPosition = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
+        //cc.Move(targetPos);
         //    isMoving = true;
         //}
         //else
@@ -161,20 +161,18 @@ public abstract class Champion : MonoBehaviour
         //    isMoving = false;
         //}
 
+        anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        agent.speed = MoveSpeed * 1.2f;
+
         if (anim.GetBool("Walk"))
         {
             agent.SetDestination(targetPos);
             dist = Vector3.Distance(agent.transform.position, targetPos);
-            if (dist < 0.02f)
-            {
-                anim.SetBool("Walk", false);
-            }
-            if (lastDist == dist && agent.velocity.x == 0 && agent.velocity.z == 0)
+            if (dist <= 0.5f)
             {
                 anim.SetBool("Walk", false);
             }
 
-            lastDist = dist;
         }
 
         //if (isMoving)

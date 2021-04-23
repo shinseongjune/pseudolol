@@ -75,13 +75,11 @@ public class Vayne : Champion
             {
                 cc.SimpleMove(tumbleDirection * tumbleSpeed);
                 tumbleStartTime += Time.deltaTime;
-                targetPos = transform.position;
                 return;
             }
             else
             {
                 tumbleDirection = Vector3.zero;
-                targetPos = transform.position;
                 isTumbling = false;
             }
         }
