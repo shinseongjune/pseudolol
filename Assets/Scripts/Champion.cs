@@ -166,7 +166,7 @@ public abstract class Champion : MonoBehaviour
 
         if (anim.GetBool("Walk"))
         {
-            agent.SetDestination(targetPos);
+            agent.destination = targetPos;
             dist = Vector3.Distance(agent.transform.position, targetPos);
             if (dist <= 0.5f)
             {
