@@ -144,7 +144,7 @@ public abstract class Champion : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         anim.SetBool("Walk", false);
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
-        agent.speed = MoveSpeed;
+        agent.speed = MoveSpeed * 1.2f;
     }
 
     protected virtual void Update()
