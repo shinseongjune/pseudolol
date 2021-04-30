@@ -14,7 +14,12 @@ public class Vayne : Champion
 
     protected override void Attack()
     {
-        throw new System.NotImplementedException();
+        StartCoroutine(NormalAttack(attackTarget));
+    }
+
+    IEnumerator NormalAttack(GameObject attackTarget)
+    {
+        yield return new WaitForSeconds(1/AS);
     }
 
     protected override void AttackMove()

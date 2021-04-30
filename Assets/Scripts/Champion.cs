@@ -43,6 +43,8 @@ public abstract class Champion : MonoBehaviour
 
     public Animator anim;
 
+    public GameObject attackTarget;
+
     float dist;
     
     protected virtual void GetEXP(int exp)
