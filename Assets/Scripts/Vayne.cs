@@ -12,16 +12,6 @@ public class Vayne : Champion
     Quaternion tumbleQ;
     Vector3 qHitPosition;
 
-    protected override void Attack()
-    {
-        StartCoroutine(NormalAttack(attackTarget));
-    }
-
-    IEnumerator NormalAttack(GameObject attackTarget)
-    {
-        yield return new WaitForSeconds(1/AS);
-    }
-
     protected override void AttackMove()
     {
         throw new System.NotImplementedException();

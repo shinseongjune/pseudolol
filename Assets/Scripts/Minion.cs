@@ -59,7 +59,7 @@ public class Minion : MonoBehaviour
 
     protected virtual void Start()
     {
-        targetPos = GameObject.Find("Nexus").transform.position;
+        targetPos = transform.position;
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();

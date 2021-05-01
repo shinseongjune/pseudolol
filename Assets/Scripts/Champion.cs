@@ -46,7 +46,15 @@ public abstract class Champion : MonoBehaviour
     public GameObject attackTarget;
 
     float dist;
-    
+
+    float attackDist;
+
+    bool attacking;
+
+    Vector3 posXZ;
+
+    Vector3 aTargetPosXZ;
+
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -94,7 +102,15 @@ public abstract class Champion : MonoBehaviour
 
     }
 
-    protected abstract void Attack();
+    protected virtual void Attack()
+    {
+        StartCoroutine(NormalAttack(attackTarget));
+        attacking = false;
+    }
+    IEnumerator NormalAttack(GameObject attackTarget)
+    {
+        yield return new WaitForSeconds(1 / AS);
+    }
 
     protected abstract void AttackMove();
 
@@ -147,6 +163,8 @@ public abstract class Champion : MonoBehaviour
         anim.SetBool("Walk", false);
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
         agent.speed = MoveSpeed * 1.2f;
+        attacking = false;
+        posXZ = new Vector3(transform.position.x, 0, transform.position.z);
     }
 
     protected virtual void Update()
@@ -163,8 +181,27 @@ public abstract class Champion : MonoBehaviour
         //    isMoving = false;
         //}
 
+        posXZ = new Vector3(transform.position.x, 0, transform.position.z);
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
         agent.speed = MoveSpeed * 1.2f;
+
+        if (attacking == true)
+        {
+            if (attackDist <= Reach)
+            {
+
+            }
+            else
+            {
+                targetPos = attackTarget.transform.position;
+                isMoving = true;
+            }
+        }
+
+        if (attackTarget == null)
+        {
+            attacking = false;
+        }
 
         if (anim.GetBool("Walk"))
         {
@@ -204,7 +241,20 @@ public abstract class Champion : MonoBehaviour
                 }
                 else if (hitName == "Player" || hitName == "Extra")
                 {
-                    // 공격이동
+                    attackTarget = hit.transform.gameObject;
+                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
+                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
+                    if(attackDist <= Reach)
+                    {
+                        isMoving = false;
+                        attacking = true;
+                    }
+                    else
+                    {
+                        targetPos = attackTarget.transform.position;
+                        attacking = true;
+                        isMoving = true;
+                    }
                 }
             }
         }
