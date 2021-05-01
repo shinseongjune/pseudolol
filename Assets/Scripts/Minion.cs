@@ -70,7 +70,7 @@ public class Minion : MonoBehaviour
 
     protected virtual void Update()
     {
-        anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        /*anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
         agent.speed = MoveSpeed * 1.2f;
 
         if (anim.GetBool("Walk"))
@@ -82,7 +82,7 @@ public class Minion : MonoBehaviour
                 anim.SetBool("Walk", false);
             }
 
-        }
+        }*/
 
 
     }

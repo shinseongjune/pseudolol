@@ -55,6 +55,8 @@ public abstract class Champion : MonoBehaviour
 
     Vector3 aTargetPosXZ;
 
+    public GameObject bulletFactory;
+
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -104,11 +106,15 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Attack()
     {
-        StartCoroutine(NormalAttack(attackTarget));
-        attacking = false;
+        StartCoroutine(NormalAttack());
     }
-    IEnumerator NormalAttack(GameObject attackTarget)
+    IEnumerator NormalAttack()
     {
+        GameObject bullet = Instantiate(bulletFactory);
+        Bullet b = bullet.GetComponent<Bullet>();
+        b.attacker = this.gameObject;
+        b.target = attackTarget;
+        b.targetPos = attackTarget.transform.position;
         yield return new WaitForSeconds(1 / AS);
     }
 
@@ -185,35 +191,6 @@ public abstract class Champion : MonoBehaviour
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
         agent.speed = MoveSpeed * 1.2f;
 
-        if (attacking == true)
-        {
-            if (attackDist <= Reach)
-            {
-
-            }
-            else
-            {
-                targetPos = attackTarget.transform.position;
-                isMoving = true;
-            }
-        }
-
-        if (attackTarget == null)
-        {
-            attacking = false;
-        }
-
-        if (anim.GetBool("Walk"))
-        {
-            agent.destination = targetPos;
-            dist = Vector3.Distance(agent.transform.position, targetPos);
-            if (dist <= 0.5f)
-            {
-                anim.SetBool("Walk", false);
-            }
-
-        }
-
         //if (isMoving)
         //{
         //    Vector3 dir = targetPos;
@@ -231,30 +208,22 @@ public abstract class Champion : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 10000f, mask))
             {
                 string hitName = hit.transform.gameObject.name;
-                if (hitName == "Ground")
+                if (hitName == "Player" || hitName == "Minion")
+                {
+                    attackTarget = hit.transform.gameObject;
+                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
+                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
+                    attacking = true;
+                    print("attackStart!");
+                }
+                else if(hitName == "Ground")
                 {
                     //Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
                     //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
                     //targetPos = targetDir - transform.position;
                     targetPos = hit.point;
+                    attackTarget = null;
                     anim.SetBool("Walk", true);
-                }
-                else if (hitName == "Player" || hitName == "Extra")
-                {
-                    attackTarget = hit.transform.gameObject;
-                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
-                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
-                    if(attackDist <= Reach)
-                    {
-                        isMoving = false;
-                        attacking = true;
-                    }
-                    else
-                    {
-                        targetPos = attackTarget.transform.position;
-                        attacking = true;
-                        isMoving = true;
-                    }
                 }
             }
         }
@@ -273,12 +242,41 @@ public abstract class Champion : MonoBehaviour
                     //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
                     //targetPos = targetDir - transform.position;
                     targetPos = hit.point;
-                }
-                else if (hitName == "Player" || hitName == "Extra")
-                {
-                    // 공격이동
+                    attackTarget = null;
+                    anim.SetBool("Walk", true);
                 }
             }
         }
+
+        if (attackTarget == null)
+        {
+            attacking = false;
+        }
+
+        if (attacking == true)
+        {
+            if (attackDist <= Reach)
+            {
+                print("attacking!");
+                anim.SetBool("Walk", false);
+                Attack();
+            }
+            else
+            {
+                targetPos = attackTarget.transform.position;
+                anim.SetBool("Walk", true);
+            }
+        }
+
+        if (anim.GetBool("Walk"))
+        {
+            agent.destination = targetPos;
+            dist = Vector3.Distance(agent.transform.position, targetPos);
+            if (dist <= 0.5f)
+            {
+                anim.SetBool("Walk", false);
+            }
+        }
+
     }
 }

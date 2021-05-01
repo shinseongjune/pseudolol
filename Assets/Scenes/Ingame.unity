@@ -632,6 +632,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   anim: {fileID: 0}
   attackTarget: {fileID: 0}
+  bulletFactory: {fileID: 4580577707124029903, guid: e0c3d138795bfe44cae89ce824fcf2b6, type: 3}
 --- !u!195 &1349324356
 NavMeshAgent:
   m_ObjectHideFlags: 0
