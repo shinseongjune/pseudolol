@@ -57,6 +57,8 @@ public abstract class Champion : MonoBehaviour
 
     public GameObject bulletFactory;
 
+    public float normalAttackDelay;
+
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -108,6 +110,7 @@ public abstract class Champion : MonoBehaviour
     {
         StartCoroutine(NormalAttack());
     }
+
     IEnumerator NormalAttack()
     {
         GameObject bullet = Instantiate(bulletFactory);
@@ -162,6 +165,7 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Start()
     {
+        normalAttackDelay = 0;
         targetPos = transform.position;
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();

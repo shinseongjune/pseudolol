@@ -14,19 +14,15 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target == null)
-        {
-            dir = targetPos - transform.position;
-            dir.Normalize();
-            transform.position += dir * speed * Time.deltaTime;
-        }
-        else
+        if (target != null)
         {
             targetPos = target.transform.position;
-            dir = targetPos - transform.position;
-            dir.Normalize();
-            transform.position += dir * speed * Time.deltaTime;
         }
+
+        dir = targetPos - transform.position;
+        dir.Normalize();
+        transform.rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
+        transform.position += dir * speed * Time.deltaTime;
 
         distance = Vector3.Distance(targetPos, transform.position);
         if (distance < 0.5f)
