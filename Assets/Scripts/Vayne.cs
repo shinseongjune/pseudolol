@@ -58,6 +58,7 @@ public class Vayne : Champion
         qHitPosition = Vector3.zero;
         base.Start();
         anim.SetFloat("TumbleTime", tumbleTime);
+        AS = 0.658f;
     }
 
     protected override void Stop()

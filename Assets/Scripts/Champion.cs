@@ -37,8 +37,6 @@ public abstract class Champion : MonoBehaviour
 
     public Vector3 targetPos;
 
-    bool isMoving = false;
-
     public NavMeshAgent agent;
 
     public Animator anim;
@@ -57,7 +55,9 @@ public abstract class Champion : MonoBehaviour
 
     public GameObject bulletFactory;
 
-    public float normalAttackDelay;
+    public GameObject normalAttackFirePosition;
+
+    public bool normalAttackable = true;
 
     protected virtual void GetEXP(int exp)
     {
@@ -108,17 +108,23 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Attack()
     {
-        StartCoroutine(NormalAttack());
+        if (normalAttackable)
+        {
+            GameObject bullet = Instantiate(bulletFactory);
+            Bullet b = bullet.GetComponent<Bullet>();
+            b.transform.position = this.normalAttackFirePosition.transform.position;
+            b.attacker = this.gameObject;
+            b.target = attackTarget;
+            b.targetPos = attackTarget.transform.position;
+            normalAttackable = false;
+            StartCoroutine(NormalAttackDelay());
+        }
     }
 
-    IEnumerator NormalAttack()
+    IEnumerator NormalAttackDelay()
     {
-        GameObject bullet = Instantiate(bulletFactory);
-        Bullet b = bullet.GetComponent<Bullet>();
-        b.attacker = this.gameObject;
-        b.target = attackTarget;
-        b.targetPos = attackTarget.transform.position;
-        yield return new WaitForSeconds(1 / AS);
+        yield return new WaitForSecondsRealtime(1 / AS);
+        normalAttackable = true;
     }
 
     protected abstract void AttackMove();
@@ -165,7 +171,6 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Start()
     {
-        normalAttackDelay = 0;
         targetPos = transform.position;
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();
@@ -212,15 +217,7 @@ public abstract class Champion : MonoBehaviour
             if (Physics.Raycast(ray, out hit, 10000f, mask))
             {
                 string hitName = hit.transform.gameObject.name;
-                if (hitName == "Player" || hitName == "Minion")
-                {
-                    attackTarget = hit.transform.gameObject;
-                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
-                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
-                    attacking = true;
-                    print("attackStart!");
-                }
-                else if(hitName == "Ground")
+                if (hitName == "Ground")
                 {
                     //Vector3 targetPosXZ = new Vector3(hit.point.x, 0f, hit.point.z);
                     //Vector3 targetDir = Vector3.MoveTowards(transform.position, targetPosXZ, MoveSpeed * Time.deltaTime);
@@ -228,6 +225,14 @@ public abstract class Champion : MonoBehaviour
                     targetPos = hit.point;
                     attackTarget = null;
                     anim.SetBool("Walk", true);
+                }
+                else
+                {
+                    attackTarget = hit.transform.gameObject;
+                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
+                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
+                    attacking = true;
+                    print("attackStart!");
                 }
             }
         }
