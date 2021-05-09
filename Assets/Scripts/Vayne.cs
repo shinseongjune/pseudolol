@@ -57,7 +57,6 @@ public class Vayne : Champion
         tumbleQ = Quaternion.identity;
         qHitPosition = Vector3.zero;
         base.Start();
-        anim.SetFloat("TumbleTime", tumbleTime);
         AS = 0.658f;
     }
 
@@ -70,6 +69,8 @@ public class Vayne : Champion
     {
         if (anim.GetBool("Tumble"))
         {
+            anim.SetBool("Walk", false);
+            attacking = false;
             if (tumbleStartTime < tumbleTime)
             {
                 cc.SimpleMove(tumbleDirection * tumbleSpeed);
@@ -98,7 +99,6 @@ public class Vayne : Champion
 
             if (Physics.Raycast(qRay, out qHit, 10000f))
             {
-                anim.SetBool("Walk", false);
                 targetPos = transform.position;
                 tumbleStartTime = 0f;
                 qHitPosition = new Vector3(qHit.point.x, transform.position.y, qHit.point.z);

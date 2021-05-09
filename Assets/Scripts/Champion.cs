@@ -47,7 +47,7 @@ public abstract class Champion : MonoBehaviour
 
     float attackDist;
 
-    bool attacking;
+    public bool attacking;
 
     Vector3 posXZ;
 
@@ -232,7 +232,6 @@ public abstract class Champion : MonoBehaviour
                     aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
                     attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
                     attacking = true;
-                    print("attackStart!");
                 }
             }
         }
@@ -266,7 +265,6 @@ public abstract class Champion : MonoBehaviour
         {
             if (attackDist <= Reach)
             {
-                print("attacking!");
                 anim.SetBool("Walk", false);
                 Attack();
             }
