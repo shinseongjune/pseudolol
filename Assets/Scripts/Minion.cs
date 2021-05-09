@@ -62,9 +62,9 @@ public class Minion : MonoBehaviour
         targetPos = transform.position;
         cc = GetComponent<CharacterController>();
         agent = GetComponent<NavMeshAgent>();
-        anim = GetComponentInChildren<Animator>();
-        anim.SetBool("Walk", false);
-        anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        //anim = GetComponentInChildren<Animator>();
+        //anim.SetBool("Walk", false);
+        //anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
         agent.speed = MoveSpeed * 1.2f;
     }
 

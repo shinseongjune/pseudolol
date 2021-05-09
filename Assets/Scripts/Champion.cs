@@ -57,8 +57,6 @@ public abstract class Champion : MonoBehaviour
 
     public GameObject normalAttackFirePosition;
 
-    public bool normalAttackable = true;
-
     protected virtual void GetEXP(int exp)
     {
         if (Level == 18)
@@ -108,7 +106,7 @@ public abstract class Champion : MonoBehaviour
 
     protected virtual void Attack()
     {
-        if (normalAttackable)
+        if (!anim.GetBool("AttackDelay"))
         {
             GameObject bullet = Instantiate(bulletFactory);
             Bullet b = bullet.GetComponent<Bullet>();
@@ -116,15 +114,16 @@ public abstract class Champion : MonoBehaviour
             b.attacker = this.gameObject;
             b.target = attackTarget;
             b.targetPos = attackTarget.transform.position;
-            normalAttackable = false;
+            anim.SetBool("AttackDelay", true);
             StartCoroutine(NormalAttackDelay());
         }
     }
 
     IEnumerator NormalAttackDelay()
     {
+        anim.SetBool("AttackDelay", true);
         yield return new WaitForSecondsRealtime(1 / AS);
-        normalAttackable = true;
+        anim.SetBool("AttackDelay", false);
     }
 
     protected abstract void AttackMove();
@@ -177,6 +176,7 @@ public abstract class Champion : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         anim.SetBool("Walk", false);
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        anim.SetBool("AttackDelay", false);
         agent.speed = MoveSpeed * 1.2f;
         attacking = false;
         posXZ = new Vector3(transform.position.x, 0, transform.position.z);
@@ -198,7 +198,9 @@ public abstract class Champion : MonoBehaviour
 
         posXZ = new Vector3(transform.position.x, 0, transform.position.z);
         anim.SetFloat("WalkSpeed", MoveSpeed / 3f);
+        anim.SetFloat("AttackSpeed", 1 / AS);
         agent.speed = MoveSpeed * 1.2f;
+
 
         //if (isMoving)
         //{
@@ -229,8 +231,6 @@ public abstract class Champion : MonoBehaviour
                 else
                 {
                     attackTarget = hit.transform.gameObject;
-                    aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
-                    attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
                     attacking = true;
                 }
             }
@@ -259,18 +259,26 @@ public abstract class Champion : MonoBehaviour
         if (attackTarget == null)
         {
             attacking = false;
+            anim.SetBool("Attack", false);
         }
 
         if (attacking == true)
         {
-            if (attackDist <= Reach)
+            aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
+            attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
+            if (attackDist <= Reach / 10)
             {
+                targetPos = transform.position;
+                agent.SetDestination(transform.position);
+                transform.LookAt(aTargetPosXZ - posXZ);
                 anim.SetBool("Walk", false);
+                anim.SetBool("Attack", true);
                 Attack();
             }
             else
             {
                 targetPos = attackTarget.transform.position;
+                anim.SetBool("Attack", false);
                 anim.SetBool("Walk", true);
             }
         }

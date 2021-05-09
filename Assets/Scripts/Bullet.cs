@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    float speed = 10f;
+    float speed = 20f;
     public GameObject attacker;
     public GameObject target;
     public Vector3 targetPos;
@@ -38,6 +38,7 @@ public class Bullet : MonoBehaviour
             distance = Vector3.Distance(targetPos, transform.position);
             if (distance < 0.5f)
             {
+                print("À¸¾Æ¾Æ");
                 Destroy(gameObject);
             }
         }

@@ -71,6 +71,7 @@ public class Vayne : Champion
         {
             anim.SetBool("Walk", false);
             attacking = false;
+            anim.SetBool("Attack", false);
             if (tumbleStartTime < tumbleTime)
             {
                 cc.SimpleMove(tumbleDirection * tumbleSpeed);
