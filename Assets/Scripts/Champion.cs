@@ -266,11 +266,11 @@ public abstract class Champion : MonoBehaviour
         {
             aTargetPosXZ = new Vector3(attackTarget.transform.position.x, 0, attackTarget.transform.position.z);
             attackDist = Vector3.Distance(posXZ, aTargetPosXZ);
-            if (attackDist <= Reach / 10)
+            if (attackDist <= Reach / 20)
             {
                 targetPos = transform.position;
                 agent.SetDestination(transform.position);
-                transform.LookAt(aTargetPosXZ - posXZ);
+                transform.LookAt(new Vector3(attackTarget.transform.position.x, transform.position.y, attackTarget.transform.position.z));
                 anim.SetBool("Walk", false);
                 anim.SetBool("Attack", true);
                 Attack();
