@@ -110,7 +110,7 @@ public class Vayne : Champion
                 anim.SetBool("Tumble", true);
             }
         }
-        else if (Input.GetButtonDown("W"))
+        if (Input.GetButtonDown("W"))
         {
             
         }
