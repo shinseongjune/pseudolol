@@ -99,3 +99,84 @@ Received Import Request.
 Start importing Assets/Anim/playerAnimCon.controller using Guid(8c5698b145b22f440965d87922648692) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b508ce1ebd6aef5bca6793197c8f1a2b') in 0.019014 seconds
   Import took 0.021018 seconds .
 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.000722 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.28 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.719 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.24 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1113 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 69.2 MB.
+System memory in use after: 69.3 MB.
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 1581.
+Total: 1.572600 ms (FindLiveObjects: 0.135300 ms CreateObjectMapping: 0.025100 ms MarkObjects: 1.359000 ms  DeleteObjects: 0.052300 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.000829 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.24 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.719 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.24 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1113 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 69.3 MB.
+System memory in use after: 69.3 MB.
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 1584.
+Total: 1.504500 ms (FindLiveObjects: 0.156900 ms CreateObjectMapping: 0.027900 ms MarkObjects: 1.266000 ms  DeleteObjects: 0.052700 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 512.422529 seconds.
+  path: Assets/Anim/xbot@Standing Aim Recoil.fbx
+  artifactKey: Guid(8bffbdd03507ed14ab2bae836ee0db27) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Anim/xbot@Standing Aim Recoil.fbx using Guid(8bffbdd03507ed14ab2bae836ee0db27) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f4a537a513a7d229d9505518cb1d79d1') in 0.170058 seconds
+  Import took 0.172174 seconds .
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.000648 seconds.
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Native extension for WebGL target not found
+Refreshing native plugins compatible for Editor in 0.24 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Invoked RoslynAnalysisRunner static constructor.
+RoslynAnalysisRunner will not be running.
+RoslynAnalysisRunner has terminated.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.710 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.24 ms, found 0 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 1113 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 86.8 MB.
+System memory in use after: 86.9 MB.
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 1631.
+Total: 1.711800 ms (FindLiveObjects: 0.137200 ms CreateObjectMapping: 0.042800 ms MarkObjects: 1.471500 ms  DeleteObjects: 0.059200 ms)
+
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
