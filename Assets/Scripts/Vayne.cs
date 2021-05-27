@@ -112,7 +112,11 @@ public class Vayne : Champion
         }
         if (Input.GetButtonDown("W"))
         {
-            
+
+        }
+        if (Input.GetButtonDown("E"))
+        {
+
         }
     }
 }
