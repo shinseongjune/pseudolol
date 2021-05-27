@@ -107,3 +107,4 @@ Received Import Request.
 Start importing Assets/Scripts/Vayne.cs using Guid(e0578b632db99c34c9f0425574af0deb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '0e0778725aad2da6ec826fbf5a6b2d1f') in 0.020848 seconds
   Import took 0.023374 seconds .
 
+AssetImportWorkerClient::OnTransportError - code=2 error=End of file
